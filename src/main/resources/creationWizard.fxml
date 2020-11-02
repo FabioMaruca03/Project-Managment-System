@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+            prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.marufeb.fiverr.java.controllers.CreationWizardController">
+    <bottom>
+        <HBox alignment="CENTER" prefHeight="42.0" prefWidth="600.0" spacing="10.0" BorderPane.alignment="CENTER">
+            <Button fx:id="back" disable="true" mnemonicParsing="false" onAction="#back" text="&lt; Back"/>
+            <Button fx:id="next" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#next"
+                    text="Next &gt;"/>
+            <Button layoutX="66.0" layoutY="10.0" mnemonicParsing="false" onAction="#cancel" text="Cancel">
+                <HBox.margin>
+                    <Insets left="15.0"/>
+                </HBox.margin>
+            </Button>
+        </HBox>
+    </bottom>
+    <center>
+        <StackPane BorderPane.alignment="CENTER">
+            <children>
+                <AnchorPane fx:id="startPane">
+                    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0"
+                          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <HBox alignment="CENTER" prefHeight="49.0" prefWidth="600.0" spacing="20.0">
+                            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name of the project"/>
+                            <TextField fx:id="projectName"/>
+                        </HBox>
+                        <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="49.0" prefWidth="600.0"
+                              spacing="20.0">
+                            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Number of people   "/>
+                            <TextField fx:id="people"/>
+                        </HBox>
+                        <HBox alignment="CENTER" layoutX="10.0" layoutY="59.0" prefHeight="49.0" prefWidth="600.0"
+                              spacing="20.0">
+                            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Deadline                      "/>
+                            <TextField fx:id="deadline"/>
+                        </HBox>
+                        <HBox alignment="CENTER" layoutX="10.0" layoutY="108.0" prefHeight="49.0" prefWidth="600.0"
+                              spacing="20.0">
+                            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Clients                          "/>
+                            <TextField fx:id="clients"/>
+                        </HBox>
+                    </VBox>
+                    <Separator layoutX="200.0" layoutY="286.0" prefHeight="0.0" prefWidth="500.0"
+                               style="-fx-border-style: solid; -fx-border-width: 0 0 1 0; -fx-border-color: black;"
+                               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="50.0"
+                               AnchorPane.rightAnchor="50.0"/>
+                </AnchorPane>
+            </children>
+        </StackPane>
+    </center>
+</BorderPane>
