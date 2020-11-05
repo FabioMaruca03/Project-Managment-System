@@ -1,5 +1,6 @@
 package com.marufeb.fiverr.java;
 
+import com.marufeb.fiverr.kotlin.model.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -7,11 +8,16 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Launcher extends Application {
     public static Stage stage;
+    public static User user;
+    public static Logger logger = Logger.getLogger("GLOBAL_LOGGER");
 
     public static void main(String[] args) {
+        logger.setLevel(Level.ALL);
         launch(args);
     }
 
@@ -45,9 +51,14 @@ public class Launcher extends Application {
 
     }
 
+    public static void login() {
+        stage.setScene(new Scene(loadFromFXML("login")));
+        stage.show();
+    }
+
     @Override
     public void start(Stage stage) {
         Launcher.stage = stage;
-        menu();
+        login();
     }
 }

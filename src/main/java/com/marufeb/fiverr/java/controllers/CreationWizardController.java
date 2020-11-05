@@ -1,8 +1,6 @@
 package com.marufeb.fiverr.java.controllers;
 
 import com.marufeb.fiverr.java.Launcher;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -36,38 +34,38 @@ public class CreationWizardController implements Initializable {
     @FXML
     private TextField clients;
 
-    private final IntegerProperty PANE = new SimpleIntegerProperty(0);
-
-    private final int MAX_PANE = 2;
 
     @FXML
     void back(ActionEvent event) {
-        PANE.setValue(PANE.getValue() - 1);
+        Launcher.menu();
         event.consume();
     }
 
     @FXML
     void cancel(ActionEvent event) {
         Launcher.menu();
+        clear();
         event.consume();
     }
 
     @FXML
     void next(ActionEvent event) {
-        PANE.setValue(PANE.getValue() + 1);
+
         event.consume();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        PANE.addListener((ob, newV, oldV) -> {
-            if (newV.intValue() < 0)
-                PANE.setValue(0);
-            else if (newV.intValue() > MAX_PANE)
-                PANE.setValue(MAX_PANE);
-            back.setDisable(newV.intValue() == 0);
-            next.setDisable(newV.intValue() == MAX_PANE);
-        });
+        back.setDisable(false);
+        next.setDisable(false);
+
+    }
+
+    private void clear() {
+        projectName.clear();
+        people.clear();
+        deadline.clear();
+        clients.clear();
     }
 }
 

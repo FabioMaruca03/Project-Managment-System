@@ -16,8 +16,10 @@ data class Team(val name: String, val leader: User, val users: MutableList<User>
                                 .removeSurrounding("[", "]")
                                 .replace(" ", "")
                                 .split("#")
-                                .map { User.findUserByEmail(it) }
-                                .toMutableList() as MutableList<User>
+                                .map {
+                                    User.findUserByEmail(it) ?: throw User.IllegalUserException("Cannot find user: $it")
+                                }
+                                .toMutableList()
 
                         Team(
                                 first().removePrefix("name=").removeSurrounding("'"),
@@ -32,6 +34,8 @@ data class Team(val name: String, val leader: User, val users: MutableList<User>
 
     init {
         users.removeIf { it.email == leader.email }
+        if (findTeamByName(name) != null)
+            throw IllegalTeamException("")
         teams.add(this)
     }
 

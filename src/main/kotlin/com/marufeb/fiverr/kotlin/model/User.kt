@@ -19,6 +19,10 @@ data class User(val email: String, private var password: String, private val l: 
                         }
                     }
         }
+
+        fun validateLogin(email: String, password: String): User? {
+            return users.find { it.email.equals(email) && it.password.equals(password.hashCode().toString().reversed()) }
+        }
     }
 
     init {
