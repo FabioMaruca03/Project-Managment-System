@@ -13,10 +13,13 @@ import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import static com.marufeb.fiverr.java.Launcher.user;
 
 public class LoginController implements Initializable {
+
+    private final Logger logger = Logger.getLogger("GLOBAL_LOGGER");
 
     @FXML
     private TextField name;
@@ -34,8 +37,10 @@ public class LoginController implements Initializable {
         user = User.Companion.validateLogin(name.getText(), password.getText());
         if (user != null) {
             clear();
+            logger.info("Logged as: " + name.getText());
             Launcher.menu();
         } else {
+            logger.warning("Cannot perform login as: " + name.getText());
             error.setOpacity(1);
             animation.start();
         }
@@ -44,12 +49,15 @@ public class LoginController implements Initializable {
 
     @FXML
     void register(MouseEvent event) {
-        User tempUser = User.Companion.validateLogin(name.getText(), password.getText());
+        User tempUser = User.Companion.findUserByEmail(name.getText());
         if (tempUser == null) {
-            user = new User(name.getText(), password.getText(), true);
+            user = new User(name.getText(), password.getText(), false);
+            Launcher.loader.saveUsers();
+            logger.info("Registered and saved user: " + name.getText());
             clear();
             Launcher.menu();
         } else {
+            logger.warning("Cannot register user: " + name.getText());
             error.setOpacity(1);
             animation.start();
         }

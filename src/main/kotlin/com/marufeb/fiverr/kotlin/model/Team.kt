@@ -8,6 +8,10 @@ data class Team(val name: String, val leader: User, val users: MutableList<User>
             return teams.find { it.name == name }
         }
 
+        fun findTeamByLeader(email: String): Team? {
+            return teams.find { it.leader.email == email }
+        }
+
         fun parseTeam(team: String) {
             team.removeSurrounding("Team(", ")")
                     .split(",")

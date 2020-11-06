@@ -27,7 +27,7 @@ class Loader {
         saveProjects()
     }
 
-    private fun saveUsers() {
+    fun saveUsers() {
         val dat = File(USERS_DB_PATH).apply { if (!exists()) createNewFile() }
         val writer = BufferedWriter(FileWriter(dat))
         writer.write("")
@@ -38,7 +38,7 @@ class Loader {
         writer.close()
     }
 
-    private fun saveTeams() {
+    fun saveTeams() {
         val dat = File(TEAMS_DB_PATH).apply { if (!exists()) createNewFile() }
         val writer = BufferedWriter(FileWriter(dat))
         writer.write("")
@@ -49,7 +49,7 @@ class Loader {
         writer.close()
     }
 
-    private fun saveTasks() {
+    fun saveTasks() {
         val dat = File(TASKS_DB_PATH).apply { if (!exists()) createNewFile() }
         val writer = BufferedWriter(FileWriter(dat))
         writer.write("")
@@ -60,7 +60,7 @@ class Loader {
         writer.close()
     }
 
-    private fun saveProjects() {
+    fun saveProjects() {
         val dat = File(PROJECTS_DB_PATH).apply { if (!exists()) createNewFile() }
         val writer = BufferedWriter(FileWriter(dat))
         writer.write("")

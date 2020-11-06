@@ -48,3 +48,4 @@ data class Project(val name: String, val tasks: MutableList<Task> = ArrayList(),
 
     class IllegalProjectException(s: String) : Throwable(s)
 }
+

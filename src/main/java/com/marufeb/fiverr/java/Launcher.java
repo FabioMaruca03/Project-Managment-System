@@ -1,5 +1,6 @@
 package com.marufeb.fiverr.java;
 
+import com.marufeb.fiverr.kotlin.data.Loader;
 import com.marufeb.fiverr.kotlin.model.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -15,9 +16,13 @@ public class Launcher extends Application {
     public static Stage stage;
     public static User user;
     public static Logger logger = Logger.getLogger("GLOBAL_LOGGER");
+    public static Loader loader = new Loader();
 
     public static void main(String[] args) {
         logger.setLevel(Level.ALL);
+        logger.info("Loading [STARTED]");
+        loader.load();
+        logger.info("Loading [ENDED]");
         launch(args);
     }
 
@@ -25,7 +30,9 @@ public class Launcher extends Application {
         Parent p = null;
         try {
             p = new FXMLLoader(Launcher.class.getResource("/" + name + ".fxml")).load();
+            logger.info("Loaded fxml: " + name);
         } catch (IOException e) {
+            logger.warning("Cannot load fxml: " + name);
             e.printStackTrace();
             System.out.println("File (FXML): " + name + ".fxml does not exist.");
             System.exit(1);
@@ -48,7 +55,8 @@ public class Launcher extends Application {
     }
 
     public static void load() {
-
+        stage.setScene(new Scene(loadFromFXML("projects")));
+        stage.show();
     }
 
     public static void login() {
