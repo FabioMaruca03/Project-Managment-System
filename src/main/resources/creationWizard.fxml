@@ -3,7 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.*?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
             prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.marufeb.fiverr.java.controllers.CreationWizardController">
@@ -22,8 +22,6 @@
     <center>
         <StackPane BorderPane.alignment="CENTER">
             <children>
-                <AnchorPane fx:id="teamsView" prefHeight="200.0" prefWidth="200.0"
-                            style="-fx-background-color: white;"/>
                 <AnchorPane fx:id="startPane" style="-fx-background-color: white;">
                     <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0"
                           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -53,8 +51,33 @@
                         <Button fx:id="assign" layoutX="304.0" layoutY="306.0" mnemonicParsing="false" text="Assign"/>
                         <Button fx:id="unsign" layoutX="240.0" layoutY="306.0" mnemonicParsing="false" text="Unsign"/>
                         <ListView fx:id="teams1" layoutX="332.0" layoutY="79.0" prefHeight="200.0" prefWidth="200.0"/>
-                        <Text layoutX="124.0" layoutY="302.0" onMouseClicked="#newTeam" strokeType="OUTSIDE"
+                        <Text layoutX="124.0" layoutY="302.0" onMouseClicked="#newTeamWizard" strokeType="OUTSIDE"
                               strokeWidth="0.0" text="create new team" underline="true"/>
+                    </children>
+                </AnchorPane>
+                <AnchorPane fx:id="teamsView" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;">
+                    <children>
+                        <TextField fx:id="taskName" layoutX="228.0" layoutY="57.0" promptText="Task name"/>
+                        <TextArea fx:id="taskDescription" layoutX="208.0" layoutY="91.0" prefHeight="132.0"
+                                  prefWidth="200.0" promptText="Task description"/>
+                        <ListView fx:id="tasks" layoutX="34.0" layoutY="57.0" prefHeight="200.0" prefWidth="150.0"/>
+                        <Text layoutX="93.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tasks"/>
+                        <Text layoutX="74.0" layoutY="283.0" onMouseClicked="#removeTask" strokeType="OUTSIDE"
+                              strokeWidth="0.0" text="Remove task" underline="true"/>
+                        <Button layoutX="267.0" layoutY="287.0" mnemonicParsing="false" onAction="#addTask"
+                                text="Add task"/>
+                        <TextField fx:id="taskDuration" layoutX="228.0" layoutY="230.0"
+                                   promptText="Task minimum duration"/>
+                        <Separator layoutX="194.0" layoutY="31.0" orientation="VERTICAL" prefHeight="297.0"
+                                   prefWidth="8.0"/>
+                        <ListView fx:id="dependencies" layoutX="420.0" layoutY="57.0" prefHeight="200.0"
+                                  prefWidth="150.0"/>
+                        <Text layoutX="456.0" layoutY="39.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="Dependencies"/>
+                        <Button layoutX="46.0" layoutY="301.0" mnemonicParsing="false" onAction="#addAsDependency"
+                                text="Add as dependency"/>
+                        <Button layoutX="428.0" layoutY="265.0" mnemonicParsing="false" onAction="#removeDependency"
+                                text="Remove dependency"/>
                     </children>
                 </AnchorPane>
             </children>

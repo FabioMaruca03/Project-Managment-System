@@ -14,6 +14,7 @@ fun main() {
     val team = Team("Try#0", fab, mutableListOf(fab, giu, sla))
     val p = Project(name = "test", admin = fab, startDate = F.parse("08/11/2020"))
     Task(
+            "Task 1e",
             "A simple test",
             10,
             team,

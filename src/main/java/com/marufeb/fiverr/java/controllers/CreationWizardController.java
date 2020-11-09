@@ -2,6 +2,7 @@ package com.marufeb.fiverr.java.controllers;
 
 import com.marufeb.fiverr.java.Launcher;
 import com.marufeb.fiverr.kotlin.model.Project;
+import com.marufeb.fiverr.kotlin.model.Task;
 import com.marufeb.fiverr.kotlin.model.Team;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -57,6 +59,63 @@ public class CreationWizardController implements Initializable {
     @FXML
     private Button unsign;
 
+    @FXML
+    private AnchorPane teamsView;
+
+    @FXML
+    private TextField taskName;
+
+    @FXML
+    private TextArea taskDescription;
+
+    @FXML
+    private ListView<String> tasks;
+
+    @FXML
+    private TextField taskDuration;
+
+    @FXML
+    private ListView<String> dependencies;
+
+    @FXML
+    void addAsDependency(ActionEvent event) {
+        event.consume();
+    }
+
+    private final List<Task> addedTasks = new ArrayList<>();
+
+    @FXML
+    void addTask(ActionEvent event) {
+        if (!taskName.getText().isBlank() && !tasksList.contains(taskName.getText()))
+            if (!taskDuration.getText().isBlank()) {
+                Task t = new Task(
+                        taskName.getText(),
+                        taskDescription.getText(),
+                        Integer.parseInt(taskDuration.getText()),
+                        Team.Companion.findTeamByLeader(Launcher.user.getEmail()),
+                        null
+                );
+                addedTasks.add(t);
+                tasksList.add(t.getName());
+            }
+        event.consume();
+    }
+
+    @FXML
+    void newTask(ActionEvent event) {
+        event.consume();
+    }
+
+    @FXML
+    void removeDependency(ActionEvent event) {
+        event.consume();
+    }
+
+    @FXML
+    void removeTask(MouseEvent event) {
+        event.consume();
+    }
+
 
     private final List<Parent> p = new ArrayList<>();
     private int index = 0;
@@ -82,11 +141,11 @@ public class CreationWizardController implements Initializable {
                     return;
                 break;
             }
-            case 1: {
-                if (teams1.getItems().isEmpty())
-                    return;
-                break;
-            }
+//            case 1: {
+//                if (teams1.getItems().isEmpty())
+//                    return;
+//                break;
+//            }
             default:
                 break;
         }
@@ -95,7 +154,7 @@ public class CreationWizardController implements Initializable {
     }
 
     @FXML
-    void newTeam(MouseEvent event) {
+    void newTeamWizard(MouseEvent event) {
         Launcher.newTeamWizard();
         event.consume();
     }
@@ -110,18 +169,24 @@ public class CreationWizardController implements Initializable {
         } else if (index == 0) {
             Launcher.menu();
         } else if (index == p.size()) {
-            Launcher.loadAndTrack();
+            if (!tasksList.isEmpty())
+                Launcher.loadAndTrack();
         }
     }
 
     private final ObservableList<String> prop = FXCollections.observableArrayList();
     private final ObservableList<String> prop1 = FXCollections.observableArrayList();
+    private final ObservableList<String> tasksList = FXCollections.observableArrayList();
+    private final ObservableList<String> dependenciesList = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         back.setDisable(false);
         next.setDisable(false);
+
         prop.addAll(Team.Companion.getTeams().stream().map(Team::getName).collect(Collectors.toSet()));
+
+
         assign.setOnAction(it -> {
             final ObservableList<String> selectedItems = teams.getSelectionModel().getSelectedItems();
             teams1.getItems().addAll(selectedItems);
@@ -135,11 +200,21 @@ public class CreationWizardController implements Initializable {
             it.consume();
         });
 
+        taskDuration.textProperty().addListener((bo, o, n) -> {
+            if (n.chars().anyMatch(it -> !Character.isDigit(it))) {
+                taskDuration.setText(o);
+            }
+        });
+
         teams.setItems(prop);
         teams1.setItems(prop1);
 
-        p.add(startPane);
-        p.add(tasksView);
+        tasks.setItems(tasksList);
+        dependencies.setItems(dependenciesList);
+
+        p.add(0, startPane);
+        p.add(1, tasksView);
+        p.add(2, teamsView);
 
         p.get(0).toFront();
     }

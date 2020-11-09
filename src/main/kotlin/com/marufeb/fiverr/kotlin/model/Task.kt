@@ -3,7 +3,7 @@ package com.marufeb.fiverr.kotlin.model
 import java.util.*
 import kotlin.collections.ArrayList
 
-data class Task(var description: String, var duration: Int, var team: Team, var projectReference: Project?) {
+data class Task(var name: String, var description: String, var duration: Int, var team: Team, var projectReference: Project?) {
 
 
     var id: UUID = UUID.randomUUID()
@@ -28,6 +28,7 @@ data class Task(var description: String, var duration: Int, var team: Team, var 
                     .apply {
                         try {
                             Task(
+                                    last().removePrefix(" name="),
                                     first().removePrefix("description="),
                                     Integer.parseInt(get(1).removePrefix(" duration=")),
                                     Team.findTeamByName(get(2).removePrefix(" team="))
@@ -45,7 +46,7 @@ data class Task(var description: String, var duration: Int, var team: Team, var 
     }
 
     override fun toString(): String {
-        return "Task(description=${description}, duration=${duration}, team=${team.name}, UUID=$id, deps=${dependencies.map { it.toString() }.toString().replace(",", "#")}"
+        return "Task(description=${description}, duration=${duration}, team=${team.name}, UUID=$id, deps=${dependencies.map { it.toString() }.toString().replace(",", "#")}, name=$name)"
     }
 
     class InvalidDateRangeException(s: String) : Exception(s)

@@ -1,6 +1,6 @@
 package com.marufeb.fiverr.kotlin.model
 
-data class Team(val name: String, val leader: User, val users: MutableList<User>) {
+data class Team(var name: String, val leader: User, val users: MutableList<User>) {
     companion object {
         val teams: MutableList<Team> = ArrayList()
 

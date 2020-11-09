@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 
 import java.net.URL;
 import java.util.List;
@@ -27,6 +28,9 @@ public class TeamsWizardController implements Initializable {
 
     @FXML
     private ListView<String> myTeam;
+
+    @FXML
+    private TextField teamName;
 
     @FXML
     void add(ActionEvent event) {
@@ -55,6 +59,14 @@ public class TeamsWizardController implements Initializable {
     @FXML
     void save(ActionEvent event) {
         Team.Companion.getTeams().removeIf(it -> !team.contains(it.getName()));
+        Team t = Team.Companion.findTeamByLeader(Launcher.user.getEmail());
+        if (t != null) {
+            t.setName(teamName.getText());
+            Team.Companion.getTeams().remove(Team.Companion.findTeamByLeader(Launcher.user.getEmail()));
+            Team.Companion.getTeams().add(t);
+        } else {
+            new Team(teamName.getText(), Launcher.user, myTeam.getItems().stream().map(it -> User.Companion.findUserByEmail(it)).collect(Collectors.toList()));
+        }
 
         event.consume();
     }
