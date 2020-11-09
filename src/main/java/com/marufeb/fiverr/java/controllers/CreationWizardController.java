@@ -18,7 +18,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -38,11 +41,7 @@ public class CreationWizardController implements Initializable {
     private TextField projectName;
 
     @FXML
-    private TextField people;
-
-    @FXML
-    private TextField deadline;
-
+    private TextField startTime;
 
     @FXML
     private AnchorPane tasksView;
@@ -130,19 +129,32 @@ public class CreationWizardController implements Initializable {
         event.consume();
     }
 
+    Date finalStartDate;
     @FXML
     void next(ActionEvent event) {
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         switch (index) {
             case 0: {
+                if (projectName.getText().isBlank())
+                    return;
+                try {
+                    if (startTime.getText().isBlank())
+                        return;
+                    else {
+                        finalStartDate = format.parse(startTime.getText());
+                    }
+                } catch (Exception e) {
+                    return;
+                }
                 if (Project.Companion.getProjects().stream().anyMatch(it -> it.getName().equals(projectName.getText())))
                     return;
                 break;
             }
-//            case 1: {
-//                if (teams1.getItems().isEmpty())
-//                    return;
-//                break;
-//            }
+            case 1: {
+                if (teams1.getItems().isEmpty())
+                    return;
+                break;
+            }
             default:
                 break;
         }
@@ -219,8 +231,7 @@ public class CreationWizardController implements Initializable {
 
     private void clear() {
         projectName.clear();
-        people.clear();
-        deadline.clear();
+        startTime.clear();
     }
 }
 

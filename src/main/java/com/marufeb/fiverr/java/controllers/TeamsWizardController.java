@@ -38,7 +38,7 @@ public class TeamsWizardController implements Initializable {
         List<String> selected = viableUsers.getSelectionModel().getSelectedItems();
         team.addAll(selected);
         users.removeAll(selected);
-        selected.forEach(it -> logger.info("Added: " + it + " at "));
+        selected.forEach(it -> logger.info("Added: " + it + " at " + (teamName.getText().isBlank() ? "unnamed team" : teamName.getText())));
         event.consume();
     }
 
@@ -52,19 +52,16 @@ public class TeamsWizardController implements Initializable {
     void rem(ActionEvent event) {
         List<String> selected = myTeam.getSelectionModel().getSelectedItems();
         team.removeAll(selected);
-        users.addAll(selected);
+        viableUsers.getItems().addAll(myTeam.getSelectionModel().getSelectedItems());
         selected.forEach(it -> logger.info("Removed: " + it + " from "));
         event.consume();
     }
 
     @FXML
     void save(ActionEvent event) {
-        Team.Companion.getTeams().removeIf(it -> !team.contains(it.getName()));
         Team t = Team.Companion.findTeamByLeader(Launcher.user.getEmail());
         if (t != null) {
             t.setName(teamName.getText());
-            Team.Companion.getTeams().remove(Team.Companion.findTeamByLeader(Launcher.user.getEmail()));
-            Team.Companion.getTeams().add(t);
         } else {
             new Team(teamName.getText(), Launcher.user, myTeam.getItems().stream().map(it -> User.Companion.findUserByEmail(it)).collect(Collectors.toList()));
         }
@@ -84,7 +81,7 @@ public class TeamsWizardController implements Initializable {
             this.users.removeAll(users);
         }
 
-        viableUsers.setItems(users);
+        viableUsers.setItems(this.users);
         myTeam.setItems(this.team);
     }
 }
