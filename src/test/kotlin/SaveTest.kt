@@ -12,11 +12,10 @@ fun main() {
     val giu = User("Giulia.Pasto03@gmail.com", "efg")
     val sla = User("Slave.a@gmail.com", "nil")
     val team = Team("Try#0", fab, mutableListOf(fab, giu, sla))
-    val p = Project(name = "test", admin = fab)
+    val p = Project(name = "test", admin = fab, startDate = F.parse("08/11/2020"))
     Task(
             "A simple test",
-            F.parse("04/09/2020"),
-            F.parse("14/09/2020"),
+            10,
             team,
             p
     )

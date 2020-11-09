@@ -2,6 +2,7 @@ package com.marufeb.fiverr.java.controllers;
 
 import com.marufeb.fiverr.java.Launcher;
 import com.marufeb.fiverr.kotlin.model.Project;
+import com.marufeb.fiverr.kotlin.model.Task;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -34,6 +35,7 @@ public class ProjectsController implements Initializable {
     @FXML
     void save(ActionEvent event) {
         Project.Companion.getProjects().removeIf(it -> !projectsList.contains(it.getName()));
+        Task.Companion.getTasks().removeIf(it -> !projectsList.contains(it.getProjectReference().getName()));
         Launcher.loader.save();
         Launcher.menu(); // todo: is this fine?
         event.consume();

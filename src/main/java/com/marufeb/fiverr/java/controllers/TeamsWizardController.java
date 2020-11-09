@@ -3,7 +3,7 @@ package com.marufeb.fiverr.java.controllers;
 import com.marufeb.fiverr.java.Launcher;
 import com.marufeb.fiverr.kotlin.model.Team;
 import com.marufeb.fiverr.kotlin.model.User;
-import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,9 +20,8 @@ import java.util.stream.Collectors;
 public class TeamsWizardController implements Initializable {
     private final Logger logger = Logger.getLogger("GLOBAL_LOGGER");
 
-    private final ObservableList<String> users = new SimpleListProperty<>();
-    private final ObservableList<String> team = new SimpleListProperty<>();
-
+    private final ObservableList<String> users = FXCollections.observableArrayList();
+    private final ObservableList<String> team = FXCollections.observableArrayList();
     @FXML
     private ListView<String> viableUsers;
 
@@ -32,15 +31,15 @@ public class TeamsWizardController implements Initializable {
     @FXML
     void add(ActionEvent event) {
         List<String> selected = viableUsers.getSelectionModel().getSelectedItems();
-        users.removeAll(selected);
         team.addAll(selected);
+        users.removeAll(selected);
         selected.forEach(it -> logger.info("Added: " + it + " at "));
         event.consume();
     }
 
     @FXML
     void cancel(ActionEvent event) {
-        Launcher.menu();
+        viableUsers.getScene();
         event.consume();
     }
 
@@ -56,6 +55,7 @@ public class TeamsWizardController implements Initializable {
     @FXML
     void save(ActionEvent event) {
         Team.Companion.getTeams().removeIf(it -> !team.contains(it.getName()));
+
         event.consume();
     }
 
@@ -63,7 +63,7 @@ public class TeamsWizardController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         users.addAll(User.Companion.getUsers().stream().map(User::getEmail).collect(Collectors.toSet()));
         Team team = Team.Companion.findTeamByLeader(Launcher.user.getEmail());
-        if (team != null) { // todo: implement new team naming
+        if (team != null) {
             Set<String> users = team.getUsers().stream().map(User::getEmail).collect(Collectors.toSet());
             this.team.addAll(users);
             this.users.removeAll(users);

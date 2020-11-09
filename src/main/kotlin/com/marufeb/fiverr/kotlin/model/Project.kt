@@ -3,12 +3,13 @@ package com.marufeb.fiverr.kotlin.model
 import java.util.*
 import kotlin.collections.ArrayList
 
-data class Project(val name: String, val tasks: MutableList<Task> = ArrayList(), val admin: User, val teams: MutableList<Team> = ArrayList()) {
+data class Project(val name: String, val startDate: Date, val tasks: MutableList<Task> = ArrayList(), val admin: User, val teams: MutableList<Team> = ArrayList()) {
 
     var id: UUID = UUID.randomUUID()
 
     init {
         projects.add(this)
+        tasks.forEach { it.projectReference = this }
     }
 
     companion object {
@@ -27,15 +28,21 @@ data class Project(val name: String, val tasks: MutableList<Task> = ArrayList(),
                     .split(",")
                     .apply {
                         try {
-                            Project(
+                            val p = Project(
                                     get(0).removePrefix("name="),
                                     admin = User.findUserByEmail(get(2).removePrefix(" admin="))
-                                            ?: throw User.IllegalUserException("Can't found user: " + get(2))
-                            ).apply {
+                                            ?: throw User.IllegalUserException("Can't found user: " + get(2)),
+                                    startDate = Date(get(4).removePrefix(" start=").toLong())
+                            )
+
+                            with(p) {
                                 id = UUID.fromString(get(3).removePrefix(" UUID="))
-                                teams
+                                get(1).split("#").forEach { s ->
+                                    tasks.add(Task.tasks.first { it.id.toString() == s.removeSurrounding(" [", "]") }.apply { projectReference = this@with })
+                                }
                             }
                         } catch (e: Exception) {
+                            e.printStackTrace()
                             System.err.println(e.message)
                         }
                     }
@@ -43,7 +50,7 @@ data class Project(val name: String, val tasks: MutableList<Task> = ArrayList(),
     }
 
     override fun toString(): String {
-        return "Project(name=$name, ${tasks.map { it.id.toString() }.toString().replace(",", " #")}, admin=${admin.email}, UUID=$id)"
+        return "Project(name=$name, ${tasks.map { it.id.toString() }.toString().replace(", ", "#")}, admin=${admin.email}, UUID=$id, start=${startDate.time})"
     }
 
     class IllegalProjectException(s: String) : Throwable(s)

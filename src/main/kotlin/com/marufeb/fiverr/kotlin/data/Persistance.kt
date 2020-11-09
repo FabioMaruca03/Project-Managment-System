@@ -75,8 +75,8 @@ class Loader {
     fun load() {
         loadUsers()
         loadTeams()
-        loadProjects()
         loadTasks()
+        loadProjects()
     }
 
     private fun loadUsers() {

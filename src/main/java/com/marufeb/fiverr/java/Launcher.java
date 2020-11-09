@@ -64,6 +64,13 @@ public class Launcher extends Application {
         stage.show();
     }
 
+    public static void newTeamWizard() {
+        Stage wizard = new Stage();
+        wizard.setScene(new Scene(loadFromFXML("teamsWizard")));
+        wizard.setTitle("Teams wizard");
+        wizard.show();
+    }
+
     @Override
     public void start(Stage stage) {
         Launcher.stage = stage;

@@ -1,17 +1,19 @@
 package com.marufeb.fiverr.kotlin.model
 
 import java.util.*
+import kotlin.collections.ArrayList
 
-data class Task(var description: String, var start: Date, var end: Date, var team: Team, val projectReference: Project) {
+data class Task(var description: String, var duration: Int, var team: Team, var projectReference: Project?) {
 
 
-    val id: UUID = UUID.randomUUID()
+    var id: UUID = UUID.randomUUID()
+    val dependencies: MutableList<UUID> = ArrayList()
 
     init {
-        if (start.after(end))
-            throw InvalidDateRangeException("The project $id has an invalid date range")
         tasks.add(this)
-        projectReference.tasks.add(this)
+        if (projectReference != null)
+            if (projectReference?.tasks?.none { it.id == id }!!)
+                projectReference!!.tasks.add(this)
     }
 
     companion object {
@@ -25,16 +27,16 @@ data class Task(var description: String, var start: Date, var end: Date, var tea
                     .split(",")
                     .apply {
                         try {
-                            val project = Project.findProjectByID(get(4).removePrefix(" project="))
-                                    ?: throw Project.IllegalProjectException("No project found with UUID: " + get(4))
                             Task(
                                     first().removePrefix("description="),
-                                    Date(get(1).removePrefix(" start=").toLong()),
-                                    Date(get(2).removePrefix(" end=").toLong()),
-                                    Team.findTeamByName(get(3).removePrefix(" team="))
+                                    Integer.parseInt(get(1).removePrefix(" duration=")),
+                                    Team.findTeamByName(get(2).removePrefix(" team="))
                                             ?: throw Team.IllegalTeamException("No team found with name: " + get(3)),
-                                    project
-                            )
+                                    null
+                            ).apply {
+                                id = UUID.fromString(get(3).removePrefix(" UUID="))
+                                dependencies.addAll(get(4).removeSurrounding(" deps=[", "]").split("#").map { UUID.fromString(it) })
+                            }
                         } catch (e: Exception) {
                             System.err.println(e.message)
                         }
@@ -43,7 +45,7 @@ data class Task(var description: String, var start: Date, var end: Date, var tea
     }
 
     override fun toString(): String {
-        return "Task(description=${description}, start=${start.time}, end=${end.time}, team=${team.name}, project=${projectReference.id})"
+        return "Task(description=${description}, duration=${duration}, team=${team.name}, UUID=$id, deps=${dependencies.map { it.toString() }.toString().replace(",", "#")}"
     }
 
     class InvalidDateRangeException(s: String) : Exception(s)
