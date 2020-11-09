@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.List;
@@ -43,7 +44,7 @@ public class TeamsWizardController implements Initializable {
 
     @FXML
     void cancel(ActionEvent event) {
-        viableUsers.getScene();
+        ((Stage) viableUsers.getScene().getWindow()).close();
         event.consume();
     }
 
@@ -68,6 +69,8 @@ public class TeamsWizardController implements Initializable {
             new Team(teamName.getText(), Launcher.user, myTeam.getItems().stream().map(it -> User.Companion.findUserByEmail(it)).collect(Collectors.toList()));
         }
 
+        Launcher.loader.saveTeams();
+        ((Stage) viableUsers.getScene().getWindow()).close();
         event.consume();
     }
 

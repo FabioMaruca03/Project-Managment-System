@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -66,9 +67,11 @@ public class Launcher extends Application {
 
     public static void newTeamWizard() {
         Stage wizard = new Stage();
+        wizard.initOwner(stage);
+        wizard.initModality(Modality.APPLICATION_MODAL);
         wizard.setScene(new Scene(loadFromFXML("teamsWizard")));
         wizard.setTitle("Teams wizard");
-        wizard.show();
+        wizard.showAndWait();
     }
 
     @Override

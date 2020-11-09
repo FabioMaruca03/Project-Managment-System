@@ -32,7 +32,7 @@ data class Task(var name: String, var description: String, var duration: Int, va
                                     first().removePrefix("description="),
                                     Integer.parseInt(get(1).removePrefix(" duration=")),
                                     Team.findTeamByName(get(2).removePrefix(" team="))
-                                            ?: throw Team.IllegalTeamException("No team found with name: " + get(3)),
+                                            ?: throw Team.IllegalTeamException("No team found with name: " + get(2)),
                                     null
                             ).apply {
                                 id = UUID.fromString(get(3).removePrefix(" UUID="))

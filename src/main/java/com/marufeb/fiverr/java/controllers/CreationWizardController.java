@@ -102,17 +102,14 @@ public class CreationWizardController implements Initializable {
     }
 
     @FXML
-    void newTask(ActionEvent event) {
-        event.consume();
-    }
-
-    @FXML
     void removeDependency(ActionEvent event) {
+        dependencies.getItems().removeAll(dependencies.getSelectionModel().getSelectedItems());
         event.consume();
     }
 
     @FXML
     void removeTask(MouseEvent event) {
+        tasks.getItems().removeAll(tasks.getSelectionModel().getSelectedItems());
         event.consume();
     }
 
@@ -156,6 +153,8 @@ public class CreationWizardController implements Initializable {
     @FXML
     void newTeamWizard(MouseEvent event) {
         Launcher.newTeamWizard();
+        prop.addAll(Team.Companion.getTeams().stream().filter(it -> it.getLeader().getEmail().equals(Launcher.user.getEmail())).map(Team::getName).collect(Collectors.toSet()));
+        prop.removeAll(prop1);
         event.consume();
     }
 
@@ -184,8 +183,7 @@ public class CreationWizardController implements Initializable {
         back.setDisable(false);
         next.setDisable(false);
 
-        prop.addAll(Team.Companion.getTeams().stream().map(Team::getName).collect(Collectors.toSet()));
-
+        prop.addAll(Team.Companion.getTeams().stream().filter(it -> it.getLeader().getEmail().equals(Launcher.user.getEmail())).map(Team::getName).collect(Collectors.toSet()));
 
         assign.setOnAction(it -> {
             final ObservableList<String> selectedItems = teams.getSelectionModel().getSelectedItems();
