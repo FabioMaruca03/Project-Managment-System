@@ -5,6 +5,7 @@ import com.marufeb.fiverr.kotlin.model.Project;
 import com.marufeb.fiverr.kotlin.model.Task;
 import com.marufeb.fiverr.kotlin.model.Team;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -78,6 +79,9 @@ public class CreationWizardController implements Initializable {
 
     @FXML
     void addAsDependency(ActionEvent event) {
+        final ObservableList<String> selectedItems = tasks.getSelectionModel().getSelectedItems();
+        dependencies.getItems().addAll(selectedItems);
+        tasks.getItems().removeAll(selectedItems);
         event.consume();
     }
 
@@ -97,7 +101,17 @@ public class CreationWizardController implements Initializable {
                 addedTasks.add(t);
                 tasksList.add(t.getName());
             }
+
+        clearTask();
+
         event.consume();
+    }
+
+    void clearTask() {
+        taskName.clear();
+        taskDuration.clear();
+        taskDescription.clear();
+        dependencies.getItems().clear();
     }
 
     @FXML
@@ -221,6 +235,17 @@ public class CreationWizardController implements Initializable {
 
         tasks.setItems(tasksList);
         dependencies.setItems(dependenciesList);
+
+        tasks.getSelectionModel().getSelectedItems().addListener((ListChangeListener<String>) c -> {
+            c.next();
+            String s = c.getList().get(0);
+            addedTasks.stream().filter(it -> it.getName().equals(s)).forEach(it -> {
+                taskName.setText(it.getName());
+                taskDescription.setText(it.getDescription());
+                taskDuration.setText(String.valueOf(it.getDuration()));
+                dependencies.setItems(FXCollections.observableArrayList(it.getDependencies().stream().map(d -> Task.Companion.findTaskByUUID(d.toString())).map(d -> d.getName()).collect(Collectors.toList())));
+            });
+        });
 
         p.add(0, startPane);
         p.add(1, tasksView);
