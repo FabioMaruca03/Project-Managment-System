@@ -183,6 +183,7 @@ public class CreationWizardController implements Initializable {
                     addedTasks.forEach(it -> it.setProjectReference(Launcher.opened));
                     Launcher.loader.saveTasks();
                     Launcher.loader.saveProjects();
+                    Launcher.view();
                 }
                 break;
             }

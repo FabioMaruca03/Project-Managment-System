@@ -5,7 +5,6 @@ import kotlin.collections.ArrayList
 
 data class Task(var name: String, var description: String, var duration: Int, var team: Team, var projectReference: Project?) {
 
-
     var id: UUID = UUID.randomUUID()
     val dependencies: MutableList<UUID> = ArrayList()
 
