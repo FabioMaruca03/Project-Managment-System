@@ -36,7 +36,9 @@ data class Task(var name: String, var description: String, var duration: Int, va
                                     null
                             ).apply {
                                 id = UUID.fromString(get(3).removePrefix(" UUID="))
-                                dependencies.addAll(get(4).removeSurrounding(" deps=[", "]").split("#").map { UUID.fromString(it) })
+                                val split = get(4).removeSurrounding(" deps=[", "]").split("# ")
+                                if (split.isNotEmpty())
+                                    dependencies.addAll(split.filter { it.isNotBlank() }.map { UUID.fromString(it) })
                             }
                         } catch (e: Exception) {
                             System.err.println(e.message)

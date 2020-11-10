@@ -5,7 +5,6 @@ import com.marufeb.fiverr.kotlin.model.Project;
 import com.marufeb.fiverr.kotlin.model.Task;
 import com.marufeb.fiverr.kotlin.model.Team;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -79,9 +78,8 @@ public class CreationWizardController implements Initializable {
 
     @FXML
     void addAsDependency(ActionEvent event) {
-        final ObservableList<String> selectedItems = tasks.getSelectionModel().getSelectedItems();
+        final ObservableList<String> selectedItems = tasks.getSelectionModel().getSelectedItems().filtered(it -> !dependencies.getItems().contains(it));
         dependencies.getItems().addAll(selectedItems);
-        tasks.getItems().removeAll(selectedItems);
         event.consume();
     }
 
@@ -98,6 +96,8 @@ public class CreationWizardController implements Initializable {
                         Team.Companion.findTeamByLeader(Launcher.user.getEmail()),
                         null
                 );
+                System.out.println(addedTasks.stream().filter(it -> dependencies.getItems().contains(it.getName())).map(Task::getId).collect(Collectors.toList()));
+                t.getDependencies().addAll(addedTasks.stream().filter(it -> dependencies.getItems().contains(it.getName())).map(Task::getId).collect(Collectors.toList()));
                 addedTasks.add(t);
                 tasksList.add(t.getName());
             }
@@ -169,6 +169,23 @@ public class CreationWizardController implements Initializable {
                     return;
                 break;
             }
+            case 2: {
+                if (tasks.getItems().isEmpty())
+                    return;
+                else {
+                    Launcher.opened = new Project(
+                            projectName.getText(),
+                            finalStartDate,
+                            addedTasks,
+                            Launcher.user,
+                            teams1.getItems().stream().map(it -> Team.Companion.findTeamByName(it)).collect(Collectors.toList())
+                    );
+                    addedTasks.forEach(it -> it.setProjectReference(Launcher.opened));
+                    Launcher.loader.saveTasks();
+                    Launcher.loader.saveProjects();
+                }
+                break;
+            }
             default:
                 break;
         }
@@ -203,6 +220,7 @@ public class CreationWizardController implements Initializable {
     private final ObservableList<String> prop1 = FXCollections.observableArrayList();
     private final ObservableList<String> tasksList = FXCollections.observableArrayList();
     private final ObservableList<String> dependenciesList = FXCollections.observableArrayList();
+//    private Task currentTask = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -236,16 +254,17 @@ public class CreationWizardController implements Initializable {
         tasks.setItems(tasksList);
         dependencies.setItems(dependenciesList);
 
-        tasks.getSelectionModel().getSelectedItems().addListener((ListChangeListener<String>) c -> {
-            c.next();
-            String s = c.getList().get(0);
-            addedTasks.stream().filter(it -> it.getName().equals(s)).forEach(it -> {
-                taskName.setText(it.getName());
-                taskDescription.setText(it.getDescription());
-                taskDuration.setText(String.valueOf(it.getDuration()));
-                dependencies.setItems(FXCollections.observableArrayList(it.getDependencies().stream().map(d -> Task.Companion.findTaskByUUID(d.toString())).map(d -> d.getName()).collect(Collectors.toList())));
-            });
-        });
+//        tasks.getSelectionModel().getSelectedItems().addListener((ListChangeListener<String>) c -> {
+//            c.next();
+//            String s = c.getList().get(0);
+//            addedTasks.stream().filter(it -> it.getName().equals(s)).forEach(it -> {
+//                taskName.setText(it.getName());
+//                taskDescription.setText(it.getDescription());
+//                taskDuration.setText(String.valueOf(it.getDuration()));
+//                dependencies.setItems(FXCollections.observableArrayList(it.getDependencies().stream().map(d -> Task.Companion.findTaskByUUID(d.toString())).map(d -> d.getName()).collect(Collectors.toList())));
+//            });
+//
+//        });
 
         p.add(0, startPane);
         p.add(1, tasksView);

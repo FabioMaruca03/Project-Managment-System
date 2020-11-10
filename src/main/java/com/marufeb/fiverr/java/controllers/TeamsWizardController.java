@@ -59,6 +59,8 @@ public class TeamsWizardController implements Initializable {
 
     @FXML
     void save(ActionEvent event) {
+        if (teamName.getText().isBlank())
+            return;
         Team t = Team.Companion.findTeamByLeader(Launcher.user.getEmail());
         if (t != null) {
             t.setName(teamName.getText());

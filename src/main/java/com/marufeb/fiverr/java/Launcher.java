@@ -1,6 +1,7 @@
 package com.marufeb.fiverr.java;
 
 import com.marufeb.fiverr.kotlin.data.Loader;
+import com.marufeb.fiverr.kotlin.model.Project;
 import com.marufeb.fiverr.kotlin.model.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +16,8 @@ import java.util.logging.Logger;
 
 public class Launcher extends Application {
     public static Stage stage;
-    public static User user;
+    public static User user = null;
+    public static Project opened = null;
     public static Logger logger = Logger.getLogger("GLOBAL_LOGGER");
     public static Loader loader = new Loader();
 

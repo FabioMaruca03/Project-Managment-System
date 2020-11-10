@@ -32,10 +32,4 @@ public class MenuController {
         event.consume();
     }
 
-    @FXML
-    void trackProgress(ActionEvent event) {
-        model.trackProgress();
-        event.consume();
-    }
-
 }

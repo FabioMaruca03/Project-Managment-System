@@ -37,8 +37,10 @@ data class Project(val name: String, val startDate: Date, val tasks: MutableList
 
                             with(p) {
                                 id = UUID.fromString(get(3).removePrefix(" UUID="))
-                                get(1).split("#").forEach { s ->
-                                    tasks.add(Task.tasks.first { it.id.toString() == s.removeSurrounding(" [", "]") }.apply { projectReference = this@with })
+                                get(1).removeSurrounding(" [", "]").split("#").forEach { s ->
+                                    val its = UUID.fromString(s)
+                                    val t = Task.tasks.first { it.id == its }.apply { projectReference = this@with }
+                                    tasks.add(t)
                                 }
                             }
                         } catch (e: Exception) {
