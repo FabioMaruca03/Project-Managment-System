@@ -27,7 +27,8 @@ public class TrackController implements Initializable {
         @Override
         protected void updateItem(RefinedTask item, boolean empty) {
             super.updateItem(item, empty);
-            setText(item.getTask().getName());
+            if (!empty)
+                setText(item.getTask().getName());
         }
     }
 

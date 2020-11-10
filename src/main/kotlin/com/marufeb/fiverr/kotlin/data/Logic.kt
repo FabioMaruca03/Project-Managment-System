@@ -23,7 +23,9 @@ fun getPath(project: Project): List<RefinedTask> {
             val deps = tasks.filter { other -> me.task.dependencies.contains(other.task.id) } // -->
             deps.filter { !it.done }.forEach { makeF(it) }
 
-            me.start = deps.maxOf { other -> other.end }
+            if (deps.isEmpty())
+                me.start = 0
+            else me.start = deps.maxOf { other -> other.end }
             me.end = me.start + me.task.duration
             me.done = true
         }
@@ -35,8 +37,9 @@ fun getPath(project: Project): List<RefinedTask> {
             val deps = tasks.filter { other -> other.task.dependencies.contains(me.task.id) } // <--
             deps.filter { !it.done }.forEach { makeB(it) }
 
-            me.endL = deps.minOf { other -> other.start }
-            me.startL = me.endL - me.task.duration
+            if (!deps.isEmpty())
+                me.endL = deps.minOf { other -> other.start }
+            else me.startL = me.endL - me.task.duration
             me.done = true
         }
         return me
