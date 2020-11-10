@@ -34,10 +34,13 @@ public class ProjectsController implements Initializable {
 
     @FXML
     void save(ActionEvent event) {
+        if (projects.getSelectionModel().isEmpty())
+            return;
         Project.Companion.getProjects().removeIf(it -> !projectsList.contains(it.getName()));
         Task.Companion.getTasks().removeIf(it -> !projectsList.contains(it.getProjectReference().getName()));
+        Launcher.opened = Project.Companion.getProjects().stream().filter(it -> it.getName().equals(projects.getSelectionModel().getSelectedItems().get(0))).collect(Collectors.toList()).get(0);
         Launcher.loader.save();
-        Launcher.menu(); // todo: is this fine?
+        Launcher.view();
         event.consume();
     }
 

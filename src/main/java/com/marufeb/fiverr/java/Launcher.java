@@ -54,7 +54,7 @@ public class Launcher extends Application {
     }
 
     public static void loadAndTrack() {
-
+        view();
     }
 
     public static void load() {
@@ -74,6 +74,11 @@ public class Launcher extends Application {
         wizard.setScene(new Scene(loadFromFXML("teamsWizard")));
         wizard.setTitle("Teams wizard");
         wizard.showAndWait();
+    }
+
+    public static void view() {
+        stage.setScene(new Scene(loadFromFXML("track")));
+        stage.show();
     }
 
     @Override
