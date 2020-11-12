@@ -32,4 +32,10 @@ public class MenuController {
         event.consume();
     }
 
+    @FXML
+    void alterProject(ActionEvent event) {
+        model.alterProject();
+        event.consume();
+    }
+
 }

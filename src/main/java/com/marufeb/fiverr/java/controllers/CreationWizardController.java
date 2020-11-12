@@ -20,10 +20,7 @@ import javafx.scene.layout.AnchorPane;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CreationWizardController implements Initializable {
@@ -89,20 +86,24 @@ public class CreationWizardController implements Initializable {
     void addTask(ActionEvent event) {
         if (!taskName.getText().isBlank() && !tasksList.contains(taskName.getText()))
             if (!taskDuration.getText().isBlank()) {
-                Task t = new Task(
+                Task t = new Task( // creates a new Task based on fields
                         taskName.getText(),
                         taskDescription.getText(),
                         Integer.parseInt(taskDuration.getText()),
-                        Team.Companion.findTeamByLeader(Launcher.user.getEmail()),
+                        Objects.requireNonNull(Team.Companion.findTeamByLeader(Launcher.user.getEmail())),
                         null
                 );
-                System.out.println(addedTasks.stream().filter(it -> dependencies.getItems().contains(it.getName())).map(Task::getId).collect(Collectors.toList()));
-                t.getDependencies().addAll(addedTasks.stream().filter(it -> dependencies.getItems().contains(it.getName())).map(Task::getId).collect(Collectors.toList()));
+                t.getDependencies() // Adds dependencies to that class
+                        .addAll(addedTasks.stream()
+                                .filter(it -> dependencies.getItems().contains(it.getName()))
+                                .map(Task::getId)
+                                .collect(Collectors.toList())
+                        );
                 addedTasks.add(t);
                 tasksList.add(t.getName());
             }
 
-        clearTask();
+        clearTask(); // Clear tasks pane
 
         event.consume();
     }
@@ -132,7 +133,7 @@ public class CreationWizardController implements Initializable {
 
     @FXML
     void back(ActionEvent event) {
-        load(-1);
+        load(-1); // Perform back operation
         event.consume();
     }
 
@@ -148,7 +149,7 @@ public class CreationWizardController implements Initializable {
     void next(ActionEvent event) {
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         switch (index) {
-            case 0: {
+            case 0: { // Check validity for pane 1
                 if (projectName.getText().isBlank())
                     return;
                 try {
@@ -164,12 +165,12 @@ public class CreationWizardController implements Initializable {
                     return;
                 break;
             }
-            case 1: {
+            case 1: { // Check validity for pane 2
                 if (teams1.getItems().isEmpty())
                     return;
                 break;
             }
-            case 2: {
+            case 2: { // Check validity for pane 3
                 if (tasks.getItems().isEmpty())
                     return;
                 else {
@@ -178,7 +179,7 @@ public class CreationWizardController implements Initializable {
                             finalStartDate,
                             addedTasks,
                             Launcher.user,
-                            teams1.getItems().stream().map(it -> Team.Companion.findTeamByName(it)).collect(Collectors.toList())
+                            teams1.getItems().stream().map(Team.Companion::findTeamByName).collect(Collectors.toList())
                     );
                     addedTasks.forEach(it -> it.setProjectReference(Launcher.opened));
                     Launcher.loader.saveTasks();
@@ -190,30 +191,36 @@ public class CreationWizardController implements Initializable {
             default:
                 break;
         }
-        load(1);
+        load(1); // Perform the next pane visualization
         event.consume();
     }
 
     @FXML
     void newTeamWizard(MouseEvent event) {
         Launcher.newTeamWizard();
-        prop.addAll(Team.Companion.getTeams().stream().filter(it -> it.getLeader().getEmail().equals(Launcher.user.getEmail())).map(Team::getName).collect(Collectors.toSet()));
+        prop.addAll(
+                Team.Companion.getTeams()
+                        .stream()
+                        .filter(it -> it.getLeader().getEmail().equals(Launcher.user.getEmail()))
+                        .map(Team::getName)
+                        .collect(Collectors.toSet())
+        );
         prop.removeAll(prop1);
         event.consume();
     }
 
     private void load(int cursor) {
-        if (cursor == -1 && index != 0) {
+        if (cursor == -1 && index != 0) { // Check for bound
             index--;
             p.get(index).toFront();
-        } else if (cursor == 1 && index != p.size() - 1) {
+        } else if (cursor == 1 && index != p.size() - 1) { // Check for bounds
             index++;
             p.get(index).toFront();
-        } else if (index == 0) {
+        } else if (index == 0) { // If try to go back when pane = 0 go to menu
             Launcher.menu();
         } else if (index == p.size()) {
             if (!tasksList.isEmpty())
-                Launcher.loadAndTrack();
+                Launcher.view(); // If reached the end of wizard show the view GUI
         }
     }
 
@@ -228,22 +235,23 @@ public class CreationWizardController implements Initializable {
         back.setDisable(false);
         next.setDisable(false);
 
+        // Show only teams that have the current user as admin
         prop.addAll(Team.Companion.getTeams().stream().filter(it -> it.getLeader().getEmail().equals(Launcher.user.getEmail())).map(Team::getName).collect(Collectors.toSet()));
 
-        assign.setOnAction(it -> {
+        assign.setOnAction(it -> { // Assign button action (Teams)
             final ObservableList<String> selectedItems = teams.getSelectionModel().getSelectedItems();
             teams1.getItems().addAll(selectedItems);
             teams.getItems().removeAll(selectedItems);
             it.consume();
         });
-        unsign.setOnAction(it -> {
+        unsign.setOnAction(it -> { // Remove button action (Teams)
             final ObservableList<String> selectedItems = teams1.getSelectionModel().getSelectedItems();
             teams.getItems().addAll(selectedItems);
             teams1.getItems().removeAll(selectedItems);
             it.consume();
         });
 
-        taskDuration.textProperty().addListener((bo, o, n) -> {
+        taskDuration.textProperty().addListener((bo, o, n) -> { // Allows only digits inside the textDuration field
             if (n.chars().anyMatch(it -> !Character.isDigit(it))) {
                 taskDuration.setText(o);
             }
@@ -254,18 +262,6 @@ public class CreationWizardController implements Initializable {
 
         tasks.setItems(tasksList);
         dependencies.setItems(dependenciesList);
-
-//        tasks.getSelectionModel().getSelectedItems().addListener((ListChangeListener<String>) c -> {
-//            c.next();
-//            String s = c.getList().get(0);
-//            addedTasks.stream().filter(it -> it.getName().equals(s)).forEach(it -> {
-//                taskName.setText(it.getName());
-//                taskDescription.setText(it.getDescription());
-//                taskDuration.setText(String.valueOf(it.getDuration()));
-//                dependencies.setItems(FXCollections.observableArrayList(it.getDependencies().stream().map(d -> Task.Companion.findTaskByUUID(d.toString())).map(d -> d.getName()).collect(Collectors.toList())));
-//            });
-//
-//        });
 
         p.add(0, startPane);
         p.add(1, tasksView);

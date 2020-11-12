@@ -25,5 +25,8 @@
         <Button mnemonicParsing="false" onAction="#loadProject" prefWidth="200.0"
                 style="-fx-border-color: #1C448E; -fx-background-color: transparent; -fx-text-fill: #cec288;"
                 text="Load project"/>
+        <Button layoutX="10.0" layoutY="66.0" mnemonicParsing="false" onAction="#alterProject" prefWidth="200.0"
+                style="-fx-border-color: #1C448E; -fx-background-color: transparent; -fx-text-fill: #cec288;"
+                text="Alter project"/>
     </VBox>
 </AnchorPane>

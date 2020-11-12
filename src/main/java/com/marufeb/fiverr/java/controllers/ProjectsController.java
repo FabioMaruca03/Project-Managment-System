@@ -13,6 +13,7 @@ import javafx.scene.control.ListView;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -28,7 +29,6 @@ public class ProjectsController implements Initializable {
     void remove(ActionEvent event) {
         List<String> selected = projects.getSelectionModel().getSelectedItems();
         projectsList.removeAll(selected);
-        selected.forEach(it -> logger.info("Deleted project: " + it));
         event.consume();
     }
 
@@ -36,11 +36,16 @@ public class ProjectsController implements Initializable {
     void save(ActionEvent event) {
         if (projects.getSelectionModel().isEmpty())
             return;
-        Project.Companion.getProjects().removeIf(it -> !projectsList.contains(it.getName()));
-        Task.Companion.getTasks().removeIf(it -> !projectsList.contains(it.getProjectReference().getName()));
-        Launcher.opened = Project.Companion.getProjects().stream().filter(it -> it.getName().equals(projects.getSelectionModel().getSelectedItems().get(0))).collect(Collectors.toList()).get(0);
-        Launcher.loader.save();
-        Launcher.view();
+        Project.Companion.getProjects()
+                .removeIf(it -> !projectsList.contains(it.getName()));
+        Task.Companion.getTasks() // Look for tasks
+                .removeIf(it -> !projectsList.contains(Objects.requireNonNull(it.getProjectReference()).getName()));
+        Launcher.opened = Project.Companion.getProjects() // Set the current project
+                .stream()
+                .filter(it -> it.getName().equals(projects.getSelectionModel().getSelectedItems().get(0)))
+                .collect(Collectors.toList()).get(0);
+        Launcher.loader.save(); // Save
+        Launcher.view(); // Go to view pane
         event.consume();
     }
 

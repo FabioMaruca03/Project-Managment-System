@@ -1,5 +1,8 @@
 package com.marufeb.fiverr.kotlin.model
 
+/**
+ * User class - used to represent a particular User
+ */
 data class User(val email: String, private var password: String, private val l: Boolean = false) {
     companion object {
         val users: MutableSet<User> = HashSet()
@@ -20,17 +23,17 @@ data class User(val email: String, private var password: String, private val l: 
                     }
         }
 
-        fun validateLogin(email: String, password: String): User? {
-            return users.find { it.email.equals(email) && it.password.equals(password.hashCode().toString().reversed()) }
+        fun validateLogin(email: String, password: String): User? { // Performs the login check
+            return users.find { it.email == email && it.password == password.hashCode().toString().reversed() }
         }
     }
 
     init {
         if (findUserByEmail(email) == null)
             users.add(this)
-        else throw IllegalUserException("Duplicate user: $email")
+        else throw IllegalUserException("Duplicate user: $email") // If any duplicate found throws an exception
         if (!l)
-            password = "${password.hashCode()}".reversed()
+            password = "${password.hashCode()}".reversed() // encrypt the password
     }
 
     class IllegalUserException(s: String) : Exception(s)

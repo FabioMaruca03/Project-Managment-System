@@ -44,7 +44,7 @@ public class TeamsWizardController implements Initializable {
 
     @FXML
     void cancel(ActionEvent event) {
-        ((Stage) viableUsers.getScene().getWindow()).close();
+        ((Stage) viableUsers.getScene().getWindow()).close(); // Closes the popup stage
         event.consume();
     }
 

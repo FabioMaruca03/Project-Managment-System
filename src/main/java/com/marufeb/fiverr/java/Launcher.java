@@ -22,7 +22,7 @@ public class Launcher extends Application {
     public static Loader loader = new Loader();
 
     public static void main(String[] args) {
-        logger.setLevel(Level.ALL);
+        logger.setLevel(Level.OFF);
         logger.info("Loading [STARTED]");
         loader.load();
         logger.info("Loading [ENDED]");
@@ -53,10 +53,6 @@ public class Launcher extends Application {
         stage.show();
     }
 
-    public static void loadAndTrack() {
-        view();
-    }
-
     public static void load() {
         stage.setScene(new Scene(loadFromFXML("projects")));
         stage.show();
@@ -74,6 +70,10 @@ public class Launcher extends Application {
         wizard.setScene(new Scene(loadFromFXML("teamsWizard")));
         wizard.setTitle("Teams wizard");
         wizard.showAndWait();
+    }
+
+    public static void mod() {
+        stage.setScene(new Scene(loadFromFXML("tasksMod")));
     }
 
     public static void view() {

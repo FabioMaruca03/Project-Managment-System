@@ -34,15 +34,15 @@ public class LoginController implements Initializable {
 
     @FXML
     void login(ActionEvent event) {
-        user = User.Companion.validateLogin(name.getText(), password.getText());
-        if (user != null) {
+        user = User.Companion.validateLogin(name.getText(), password.getText()); // set the global user
+        if (user != null) { // If user found
             clear();
             logger.info("Logged as: " + name.getText());
             Launcher.menu();
         } else {
             logger.warning("Cannot perform login as: " + name.getText());
             error.setOpacity(1);
-            animation.start();
+            animation.start(); // Animated error message start
         }
         event.consume();
     }
@@ -50,16 +50,16 @@ public class LoginController implements Initializable {
     @FXML
     void register(MouseEvent event) {
         User tempUser = User.Companion.findUserByEmail(name.getText());
-        if (tempUser == null) {
-            user = new User(name.getText(), password.getText(), false);
-            Launcher.loader.saveUsers();
+        if (tempUser == null) { // User not found
+            user = new User(name.getText(), password.getText(), false); // Create new user
+            Launcher.loader.saveUsers(); // Save the new user
             logger.info("Registered and saved user: " + name.getText());
-            clear();
-            Launcher.menu();
+            clear(); // clear pane
+            Launcher.menu(); // Show menu
         } else {
             logger.warning("Cannot register user: " + name.getText());
             error.setOpacity(1);
-            animation.start();
+            animation.start(); // Animated error start
         }
         event.consume();
     }
@@ -71,6 +71,7 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Animaiton
         animation = new AnimationTimer() {
             @Override
             public void handle(long now) {

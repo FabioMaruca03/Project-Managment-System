@@ -7,7 +7,7 @@ import com.marufeb.fiverr.kotlin.model.User
 import java.io.*
 
 class Loader {
-    companion object {
+    companion object { // Static reference to DB files / folders
         private val PATH = System.getProperty("user.home") + File.separator + "project_manager"
         val DB_PATH = PATH + File.separator + "data"
         val USERS_DB_PATH = DB_PATH + File.separator + "users.dat"
@@ -17,9 +17,10 @@ class Loader {
     }
 
     init {
-        File(DB_PATH).apply { if (!exists()) mkdirs() }
+        File(DB_PATH).apply { if (!exists()) mkdirs() } // Make sure that folder exists
     }
 
+    // Save
     fun save() {
         saveUsers()
         saveTeams()
@@ -71,7 +72,7 @@ class Loader {
         writer.close()
     }
 
-
+    // Load
     fun load() {
         loadUsers()
         loadTeams()

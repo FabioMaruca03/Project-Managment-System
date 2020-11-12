@@ -1,5 +1,8 @@
 package com.marufeb.fiverr.kotlin.model
 
+/**
+ * Team class - used to represent a particular team
+ */
 data class Team(var name: String, val leader: User, val users: MutableList<User>) {
     companion object {
         val teams: MutableList<Team> = ArrayList()
@@ -21,7 +24,8 @@ data class Team(var name: String, val leader: User, val users: MutableList<User>
                                 .replace(" ", "")
                                 .split("#")
                                 .map {
-                                    User.findUserByEmail(it) ?: throw User.IllegalUserException("Cannot find user: $it")
+                                    User.findUserByEmail(it)
+                                            ?: throw User.IllegalUserException("Cannot find user: $it") // If any user is not found throws an exception
                                 }
                                 .toMutableList()
 
@@ -37,10 +41,12 @@ data class Team(var name: String, val leader: User, val users: MutableList<User>
     }
 
     init {
+        // Avoid duplicates
         users.removeIf { it.email == leader.email }
+
         if (findTeamByName(name) != null)
-            throw IllegalTeamException("")
-        teams.add(this)
+            throw IllegalTeamException("") // If that team is not found throws an exception
+        teams.add(this) // Add this team to the static teams list
     }
 
     override fun toString(): String {

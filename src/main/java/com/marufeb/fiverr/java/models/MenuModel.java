@@ -27,6 +27,10 @@ public class MenuModel {
     }
 
     public void trackProgress() {
-        Launcher.loadAndTrack();
+        Launcher.view();
+    }
+
+    public void alterProject() {
+        Launcher.mod();
     }
 }
